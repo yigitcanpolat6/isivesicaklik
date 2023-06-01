@@ -1,0 +1,35 @@
+#include <SimpleDHT.h>    // Kütüphaneyi ekler.
+
+int sensor = 2;    // Sensör "DATA" pinimizi tanımlayıp belirliyoruz.
+SimpleDHT22 dht22; // Kütüphane fonksiyonlarını tanımlar.
+
+void setup() {
+  
+  Serial.begin(115200); // 115200 baud rate'de seri haberleşmeyi başlatır.
+}
+
+void loop() {
+  
+  float nem = 0;        // Nem ve sıcaklık değerleri için ayrı değişkenler tanımlıyoruz.
+  float sicaklik = 0;
+  
+  int hata = SimpleDHTErrSuccess;
+  
+  if ((hata = dht22.read2(sensor, &sicaklik, &nem, NULL)) != SimpleDHTErrSuccess) {  // Sensör okumada hata olduğunda
+    Serial.print("DHT22 sensörünü okurken bir hata meydana geldi");                  // hata nedenini ekrana yansıtır
+    Serial.println(hata);                                                            // ve 5 sn içinde işlemi sonlandırır.
+    delay(5000);
+    return;
+  }
+
+
+  Serial.print("(%) Bağıl Nem: "); // Okunan nem değerini ekrana yansıtır.
+  Serial.println((float)nem,1);    
+       
+  Serial.print("(C) Sıcaklık: ");  // Okunan sıcaklık değerini ekrana yansıtır.
+  Serial.println((float)sicaklik,1);    
+  Serial.println();
+
+  delay(5000);                      // Okumalar arası 5 saniye ara.
+  
+}
